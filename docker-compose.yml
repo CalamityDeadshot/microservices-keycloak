@@ -1,0 +1,22 @@
+version: "3.2"
+
+services:
+  test_app:
+    build: .
+    container_name: test_client
+    ports:
+      - "8080:8080"
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    command: start-dev
+    container_name: test_keycloak
+    volumes:
+      - ./tmp/keycloak:/opt/keycloak/data/
+    ports:
+      - "18080:8080"
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    healthcheck:
+      test: "curl -f http://localhost:8080/auth || exit 1"
